@@ -3,84 +3,152 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Для Злати</title>
+    <title>Для Злати </title>
     <style>
-        /* Центруємо все по вертикалі та горизонталі */
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-family: 'Segoe UI', sans-serif;
             display: flex;
             justify-content: center;
             align-items: center;
             height: 100vh;
             margin: 0;
-            background-color: #f0f2f5;
+            background: linear-gradient(-45deg, #ff9a9e, #fad0c4, #a1c4fd, #c2e9fb);
+            background-size: 400% 400%;
+            animation: gradientBG 10s ease infinite;
             text-align: center;
+            overflow: hidden;
         }
 
-        .container {
-            padding: 20px;
+        @keyframes gradientBG {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
         }
 
-        .hidden {
-            display: none;
+        .card {
+            background: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(10px);
+            padding: 40px;
+            border-radius: 30px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+            width: 300px;
+            z-index: 10;
         }
 
-        h1 {
-            font-size: 2rem;
-            color: #333;
+        .hidden { display: none; }
+
+        h1 { color: #333; margin-bottom: 10px; font-size: 1.6rem; }
+        
+        .compliment {
+            color: #ff4b6b;
+            font-size: 1.2rem;
+            font-weight: bold;
+            margin: 20px 0;
+            min-height: 50px;
         }
 
         button {
-            padding: 15px 30px;
-            font-size: 1.2rem;
+            padding: 15px 35px;
+            font-size: 1.1rem;
+            font-weight: bold;
             cursor: pointer;
-            background-color: #007bff;
+            background: linear-gradient(45deg, #ff6b6b, #ff8e8e);
             color: white;
             border: none;
-            border-radius: 8px;
-            transition: background 0.3s;
+            border-radius: 50px;
+            box-shadow: 0 5px 15px rgba(255, 75, 43, 0.3);
+            transition: 0.3s;
         }
 
-        button:hover {
-            background-color: #0056b3;
-        }
+        button:hover { transform: scale(1.05); }
 
-        /* Стиль для кнопки "Назад" (можна зробити іншим кольором) */
         .btn-back {
-            background-color: #6c757d;
+            background: #f0f0f0;
+            color: #888;
+            margin-top: 20px;
+            font-size: 0.9rem;
+            box-shadow: none;
         }
 
-        .btn-back:hover {
-            background-color: #5a6268;
-        }
+        canvas { position: absolute; top: 0; left: 0; pointer-events: none; z-index: 5; }
     </style>
 </head>
 <body>
 
-    <div class="container">
-        <!-- Крок 1 -->
-        <div id="step1">
-            <h1>Привіт, тебе звуть Злата?</h1>
-            <button onclick="showNext()">Так</button>
-        </div>
+    <canvas id="canvas"></canvas>
 
-        <!-- Крок 2 -->
-        <div id="step2" class="hidden">
-            <h1>Круто!</h1>
-            <button class="btn-back" onclick="showBack()">Назад</button>
-        </div>
+    <div id="step1" class="card">
+        <h1>Привіт, тебе звуть Злата?</h1>
+        <button onclick="showLove()">Так!</button>
+    </div>
+
+    <div id="step2" class="card hidden">
+        <h1>Круто! </h1>
+        <div id="compliment-text" class="compliment"></div>
+        <button class="btn-back" onclick="goBack()">Назад</button>
     </div>
 
     <script>
-        function showNext() {
+        const compliments = [
+            "Ти неймовірно чарівна! ", "Твоя посмішка осяює все навколо! ", 
+            "Ти дуже особлива дівчина! ", "Твій стиль просто неперевершений! ",
+            "Ти розумна і це дуже круто! ", "Твої очі — як цілий всесвіт! ",
+            "З тобою завжди затишно і тепло! ", "Ти надихаєш бути кращим! ",
+            "Ти маєш дивовижне почуття гумору! ", "Ти справжня квіточка! ",
+            "Твоя доброта не має меж! ", "Ти — справжній промінь сонця! ",
+            "У тебе чудовий смак! ", "Ти дуже талановита! ",
+            "Твоя енергія заряджає! ", "Ти сонечко в похмурий день! ",
+            "Ти заслуговуєш на все найкраще! ", "Твій голос дуже милозвучний! ",
+            "Ти робиш цей світ кращим! ", "Ти просто космос! "
+        ];
+
+        function showLove() {
+            const randomComp = compliments[Math.floor(Math.random() * compliments.length)];
+            document.getElementById('compliment-text').innerText = randomComp;
+            
             document.getElementById('step1').classList.add('hidden');
             document.getElementById('step2').classList.remove('hidden');
+            createConfetti();
         }
-        function showBack() {
+
+        function goBack() {
             document.getElementById('step2').classList.add('hidden');
             document.getElementById('step1').classList.remove('hidden');
         }
-    </script>
 
+        // Конфеті (вбудований скрипт)
+        const canvas = document.getElementById('canvas');
+        const ctx = canvas.getContext('2d');
+        let particles = [];
+
+        function resize() { canvas.width = window.innerWidth; canvas.height = window.innerHeight; }
+        window.addEventListener('resize', resize);
+        resize();
+
+        function createConfetti() {
+            for (let i = 0; i < 70; i++) {
+                particles.push({
+                    x: canvas.width / 2, y: canvas.height / 2,
+                    size: Math.random() * 8 + 2,
+                    color: `hsl(${Math.random() * 360}, 70%, 60%)`,
+                    speedX: Math.random() * 10 - 5,
+                    speedY: Math.random() * 10 - 8,
+                    gravity: 0.2
+                });
+            }
+        }
+
+        function update() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            particles.forEach((p, i) => {
+                p.x += p.speedX; p.y += p.speedY; p.speedY += p.gravity;
+                ctx.fillStyle = p.color;
+                ctx.fillRect(p.x, p.y, p.size, p.size);
+                if (p.y > canvas.height) particles.splice(i, 1);
+            });
+            requestAnimationFrame(update);
+        }
+        update();
+    </script>
 </body>
 </html>
