@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Для Злати</title>
+    <style>
+        /* Центруємо все по вертикалі та горизонталі */
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #f0f2f5;
+            text-align: center;
+        }
+
+        .container {
+            padding: 20px;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        h1 {
+            font-size: 2rem;
+            color: #333;
+        }
+
+        button {
+            padding: 15px 30px;
+            font-size: 1.2rem;
+            cursor: pointer;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            transition: background 0.3s;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+
+        /* Стиль для кнопки "Назад" (можна зробити іншим кольором) */
+        .btn-back {
+            background-color: #6c757d;
+        }
+
+        .btn-back:hover {
+            background-color: #5a6268;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <!-- Крок 1 -->
+        <div id="step1">
+            <h1>Привіт, тебе звуть Злата?</h1>
+            <button onclick="showNext()">Так</button>
+        </div>
+
+        <!-- Крок 2 -->
+        <div id="step2" class="hidden">
+            <h1>Круто!</h1>
+            <button class="btn-back" onclick="showBack()">Назад</button>
+        </div>
+    </div>
+
+    <script>
+        function showNext() {
+            document.getElementById('step1').classList.add('hidden');
+            document.getElementById('step2').classList.remove('hidden');
+        }
+        function showBack() {
+            document.getElementById('step2').classList.add('hidden');
+            document.getElementById('step1').classList.remove('hidden');
+        }
+    </script>
+
+</body>
+</html>
